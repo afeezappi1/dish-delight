@@ -1,40 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Redirect immediately for browsers that handle PDFs well -->
-  <meta http-equiv="refresh" content="0; url=menu.pdf">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Restaurant Menu</title>
-
-  <!-- Minimal styling purely for the fallback message -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="refresh" content="0; url=menu.pdf">
+  <title>Bella Cucina - Menu</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* The page is never visible on capable browsers, so keep this tiny */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
     body {
-      font-family: system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #4a2c2a;
+      text-align: center;
+      overflow: hidden;
+    }
+    
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #d35400;
+    }
+    
+    .logo i {
+      margin-right: 8px;
+      font-size: 1.5rem;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 450px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 20px;
+    }
+    
+    .decoration {
+      position: absolute;
+      top: -50px;
+      right: -30px;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(120deg, #e74c3c, #e67e22);
+      border-radius: 50%;
+      z-index: 0;
+      opacity: 0.1;
+    }
+    
+    .content {
+      padding: 40px 30px 30px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .illustration {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 25px;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
+      box-shadow: 0 10px 20px rgba(250, 128, 114, 0.2);
     }
-    a {
-      text-decoration: none;
-      padding: 0.75rem 1.25rem;
-      border: 1px solid #000;
-      border-radius: 6px;
+    
+    .illustration i {
+      font-size: 80px;
+      color: white;
+    }
+    
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 15px;
+      color: #4a2c2a;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      color: #7b5e57;
+    }
+    
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 25px;
+      border-radius: 15px;
+      font-size: 1.15rem;
       font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, #e74c3c, #e67e22);
+      color: white;
+      box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+    }
+    
+    .btn-primary i {
+      margin-right: 12px;
+      font-size: 1.3rem;
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #4a2c2a;
+      border: 2px solid #f1c27d;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .btn-secondary i {
+      margin-right: 12px;
+      color: #e67e22;
+    }
+    
+    .loading {
+      display: none;
+      margin: 25px 0;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(231, 76, 60, 0.2);
+      border-top: 4px solid #e74c3c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .status-message {
+      min-height: 80px;
+      padding: 15px;
+      background: #fdf6e9;
+      border-radius: 15px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 4px solid #e67e22;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #7b5e57;
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Shake animation for refresh */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    
+    .shake {
+      animation: shake 0.5s ease;
+    }
+    
+    /* Mobile specific adjustments */
+    @media (max-height: 700px) {
+      .content {
+        padding: 30px 20px 20px;
+      }
+      
+      .illustration {
+        width: 130px;
+        height: 130px;
+        margin-bottom: 20px;
+      }
+      
+      .illustration i {
+        font-size: 60px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
-
 <body>
-  <!-- Fallback for browsers that CANNOT render or auto‑open the PDF -->
-  <h1>Refresh</h1>
-  <p>
-    Your browser can’t display the menu automatically.<br>
-    <a href="menu.pdf" download>Tap here to download the PDF&nbsp;↗︎</a>
-  </p>
+  <div class="header">
+    <div class="logo">
+      <i class="fas fa-utensils"></i>
+      <span>Bella Cucina</span>
+    </div>
+    <div class="contact">
+      <i class="fas fa-phone"></i>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="decoration"></div>
+    
+    <div class="content">
+      <div class="illustration pulse">
+        <i class="fas fa-book-open"></i>
+      </div>
+      
+      <h1>Our Delicious Menu</h1>
+      
+      <div class="status-message" id="status-message">
+        <p>Opening menu... Please wait a moment</p>
+      </div>
+      
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px;">Loading menu, please wait...</p>
+      </div>
+      
+      <div class="actions">
+        <button id="refresh-btn" class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> Refresh Menu
+        </button>
+        <a href="menu.pdf" download class="btn btn-secondary">
+          <i class="fas fa-download"></i> Download PDF
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>If the menu doesn't open, check your browser settings for PDF viewing</p>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const refreshBtn = document.getElementById('refresh-btn');
+      const loadingElement = document.getElementById('loading');
+      const statusMessage = document.getElementById('status-message');
+      const illustration = document.querySelector('.illustration');
+      
+      // Set initial timeout for auto-refresh
+      let redirectTimeout = null;
+      
+      // Function to redirect to PDF
+      function redirectToPdf() {
+        // Show loading indicator
+        loadingElement.style.display = 'block';
+        statusMessage.innerHTML = '<p>Opening menu... Almost there!</p>';
+        
+        // Add animation to illustration
+        illustration.classList.remove('pulse');
+        illustration.classList.add('shake');
+        
+        // Try to open the PDF
+        try {
+          window.location.href = 'menu.pdf';
+        } catch (e) {
+          console.error('Error redirecting to PDF:', e);
+        }
+        
+        // Set timeout to handle cases where redirect doesn't work
+        redirectTimeout = setTimeout(function() {
+          loadingElement.style.display = 'none';
+          statusMessage.innerHTML = '<p>Menu didn\'t open automatically.<br>Please try refreshing or downloading.</p>';
+          illustration.classList.remove('shake');
+          illustration.classList.add('pulse');
+        }, 3000);
+      }
+      
+      // Initial redirect attempt
+      redirectToPdf();
+      
+      // Add event listener to refresh button
+      refreshBtn.addEventListener('click', function() {
+        // Clear any existing timeout
+        if (redirectTimeout) {
+          clearTimeout(redirectTimeout);
+        }
+        
+        statusMessage.innerHTML = '<p>Trying again to open the menu...</p>';
+        redirectToPdf();
+      });
+      
+      // Add touch feedback to buttons
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('touchstart', function() {
+          this.style.opacity = '0.8';
+        });
+        
+        btn.addEventListener('touchend', function() {
+          this.style.opacity = '1';
+        });
+      });
+    });
+  </script>
 </body>
 </html>
